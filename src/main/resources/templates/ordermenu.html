@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header2 :: common-header" />
+
+<body>
+	<div th:replace="common/header2 :: navbar" />
+	<div class="container-fluid">
+		<div class="table-responsive">
+			<table id="productListTable" class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th>Product Name</th>
+						<th>id</th>
+						<th>our Price</th>
+						<th>Numbers available</th>
+						<th>Category</th>
+						<th>description</th>
+						<th>Price Bought</th>
+						<th>list Price</th>
+						</tr>
+				</thead>
+				<tbody>
+					<tr data-th-each="product : ${productList}">
+						<td><a th:href="@{/product/productInfo(id=${product.id})}"><span th:text="${product.name}"></span></a></td>
+						
+						<td th:text="${product.id}"></td>
+						<td th:text="${product.ourPrice}"></td>
+						<td th:text="${product.inStockNumber}"></td>
+						<td th:text="${product.category.type}"></td>
+						<td th:text="${product.description}"></td>
+						
+						<td th:text="${product.priceBought}"></td>
+						<td th:text="${product.listPrice}"></td>
+						
+						<td th:text="${product.active}"></td>
+						
+						
+					</tr>
+				</tbody>
+			</table>
+	</div>
+	</div>
+	
+	<div th:replace="common/header2 :: body-bottom-scripts"></div> 
+	
+	<script>
+		
+	 $(document).ready(function(){    
+		   var table= $('#productListTable').DataTable({
+			   "lengthMenu": [[5,10,15,20,-1],[5,10,15,20,"All"]],
+				"ordering": false,
+				stateSave: true
+		       
+		    });
+		    
+		   
+		    
+		    
+		    
+		    
+		    
+		});
+		
+		
+		</script>
+	
+</body>
+</html>
