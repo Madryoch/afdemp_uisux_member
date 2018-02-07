@@ -1,6 +1,7 @@
 package org.afdemp.uisux.controller;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,13 @@ import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.domain.ShoppingCart;
 import org.afdemp.uisux.domain.MemberCartItem;
 import org.afdemp.uisux.domain.User;
+import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.service.MemberCartItemService;
 import org.afdemp.uisux.service.AccountService;
 import org.afdemp.uisux.service.CategoryService;
 import org.afdemp.uisux.service.ProductService;
+import org.afdemp.uisux.service.UserRoleService;
+import org.afdemp.uisux.service.UserService;
 import org.afdemp.uisux.utility.ImageUtility;
 import org.afdemp.uisux.utility.MemberCartItemWrapper;
 
@@ -37,6 +41,12 @@ public class ProductController {
 	
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private UserRoleService userRoleService;
 	
 	@RequestMapping("/productList")
 	public String productList(Model model) {
@@ -52,6 +62,25 @@ public class ProductController {
 		
 		return "productInfo";
 	}
+	
+	@RequestMapping(value = "/offer", method = RequestMethod.POST)
+	public String offer(@ModelAttribute("product") Product product,
+			@ModelAttribute("qty") Integer qty,
+			Model model, Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_MEMBER");
+		
+		if (memberCartItemService.putUpForSale(product, qty, userRole.getShoppingCart())) {
+			model.addAttribute("offerSuccess", true);
+		}else {
+			model.addAttribute("offerFailure", true);
+		}
+
+		return "/";
+	}
+	
+	
+	
 	
 	
 	
@@ -180,28 +209,6 @@ public class ProductController {
 		
 		model.addAttribute("memberCartItemWrapper", memberCartItemWrapper);
 		return "stockUpConfirm";
-	}
-	
-	@RequestMapping(value = "/stockUp", method = RequestMethod.POST)
-	public String stockUpPost(@ModelAttribute("memberCartItemId") Long memberCartItemId,
-			@ModelAttribute("qty") Integer qty,
-			Model model) {
-		
-		MemberCartItem memberCartItem = memberCartItemService.findById(memberCartItemId);
-		
-		if (qty > memberCartItem.getQty()) {
-			model.addAttribute("requestExceedsAvailability", true);
-		}else if (!accountService.hasEnoughBalance(memberCartItem.getCurrentPurchasePrice().multiply(BigDecimal.valueOf(qty)))) {
-			model.addAttribute("notEnoughBalanceFailure", true);
-		}else if (qty == memberCartItem.getQty()) {
-			memberCartItemService.fullPurchaseFromMember(memberCartItem);
-			model.addAttribute("stockUpSuccess", true);
-		}else {
-			memberCartItemService.partialPurchaseFromMember(memberCartItem, qty);
-			model.addAttribute("stockUpSuccess", true);
-		}
-
-		return "redirect:/product/productList";
 	}
 
 
