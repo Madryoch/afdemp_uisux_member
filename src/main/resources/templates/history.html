@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header2 :: common-header" />
+
+<body>
+	<div th:replace="common/header2 :: navbar" ></div>
+<div class="container" id="deleteAfter" >
+  <div class="jumbotron">
+        
+    <p>To see your order history please select the starting and ending date of the search</p>
+  						
+  </div>
+     
+</div>
+	
+	
+	<div class="container" id="all">
+		<div class="table-responsive">
+			<table id="clientListTable" class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th>Status</th>
+						<th>Id</th>
+						<th>submittedDate</th>
+						<th>shippingDate</th>
+						<th>shippingMethod</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-th-each="client : ${clientOrderList}">
+						<td th:text="${client.orderStatus}"></td>
+						<td th:text="${client.id}"></td>
+						<td th:text="${client.submittedDate}"></td>
+						<td th:text="${client.shippingDate}"></td>
+						<td th:text="${client.shippingMethod}"></td>
+						<td th:text="${client.Total}"></td>
+						
+						
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+
+
+
+		<div class="row">
+			<form class="form-horizontal" th:action="@{/history}" method="post"
+				enctype="multipart/form-data">
+				<fieldset>					<!-- title -->
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="title">start date</label>
+
+						<div class="col-md-8">
+							<input type="date" name="fromDate" class="form-control" id="fromDate"
+								th:value="${fromDate}"  placeholder="fromDate" />
+							<span class="help-block">when to start searching</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="title">end date</label>
+
+						<div class="col-md-8">
+							<input type="date" name="toDate" class="form-control" id="toDate"
+								th:value="${toDate}"  placeholder="toDate" />
+							<span class="help-block">end of search</span>
+						</div>
+					</div>
+
+
+
+
+					<div class="form-group">
+						<div class="col-md-2"></div>
+						<div class="col-md-8">
+							<button type="submit" class="btn btn-success">search</button>
+							<a class="btn btn-danger" th:href="@{/home}">Cancel</a>
+						</div>
+						
+					</div>
+				</fieldset>
+			</form>
+		</div>
+<!-- 	<button type="button" id="bt1" class="btn btn-info">next</button>
+ -->
+	
+<!--  <button id="btn1">Append text</button><button id="btn2">Previous text</button> -->
+	
+	<div th:replace="common/header2 :: body-bottom-scripts" ></div>
+	
+	<script th:inline="javascript">
+	 /*<![CDATA[*/
+
+	 $(document).ready(function(){    
+		 var table= $('#clientListTable').DataTable({
+			   "lengthMenu": [[5,10,15,20,-1],[5,10,15,20,"All"]],
+				"ordering": false,
+				stateSave: true
+		       
+		    });
+			
+		 
+			});
+		
+	</script>
+	
+</body>
+</html>
