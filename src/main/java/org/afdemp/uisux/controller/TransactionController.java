@@ -26,13 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class TransactionController {
 	
-	
-	@Autowired
-	private AccountService accountService;
-	
-	@Autowired
-	private ClientOrderService clientOrderService;
-	
 	@Autowired
 	private TransactionService transactionService;
 

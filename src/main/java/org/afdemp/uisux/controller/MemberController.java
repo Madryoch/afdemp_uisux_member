@@ -24,7 +24,6 @@ public class MemberController {
 	@RequestMapping("/memberInfo")
 	public String memberInfo(Model model, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
-//		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_MEMBER");
 		user.setPassword(""); //password not sent to view
 		model.addAttribute("user", user);
 		return "memberInfo";

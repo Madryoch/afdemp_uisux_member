@@ -24,7 +24,6 @@ import org.afdemp.uisux.utility.ImageUtility;
 import org.afdemp.uisux.utility.MemberCartItemWrapper;
 
 @Controller
-@RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
@@ -38,6 +37,37 @@ public class ProductController {
 	
 	@Autowired
 	private AccountService accountService;
+	
+	@RequestMapping("/productList")
+	public String productList(Model model) {
+		List<Product> productList = productService.findAllActive();
+		model.addAttribute("productList", productList);		
+		return "productList";
+	}
+	
+	@RequestMapping("/productInfo")
+	public String productInfo(@RequestParam("id") Long id, Model model) {
+		Product product = productService.findOne(id);
+		model.addAttribute("product", product);
+		
+		return "productInfo";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String addProduct(Model model) {
@@ -73,12 +103,7 @@ public class ProductController {
 		return "addProduct";
 	}
 	
-	@RequestMapping("/productList")
-	public String productList(Model model) {
-		List<Product> productList = productService.findAll();
-		model.addAttribute("productList", productList);		
-		return "productList";
-	}
+
 	
 	@RequestMapping(value="/remove", method=RequestMethod.POST)
 	public String remove(
@@ -91,13 +116,7 @@ public class ProductController {
 	}
 	
 	
-	@RequestMapping("/productInfo")
-	public String productInfo(@RequestParam("id") Long id, Model model) {
-		Product product = productService.findOne(id);
-		model.addAttribute("product", product);
-		
-		return "productInfo";
-	}
+
 	
 	@RequestMapping("/updateProduct")
 	public String updateProduct(@RequestParam("id") Long id, Model model) {
