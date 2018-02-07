@@ -29,16 +29,14 @@
 				</thead>
 				<tbody>
 					<tr data-th-each="product : ${productList}">
-						<td><a th:href="@{/product/productInfo(id=${product.id})}"><span th:text="${product.name}"></span></a></td>
+						<td><a th:href="@{/productInfo(id=${product.id})}"><span th:text="${product.name}"></span></a></td>
 						<td th:text="${product.id}"></td>
 						<td th:text="${product.ourPrice}"></td>
-						<td><a th:href="@{/product/stockUp(id=${product.id})}"><span th:text="${product.inStockNumber}"></span></a></td>
+						<td th:text="${product.inStockNumber}"></td>
 						<td th:text="${product.category.type}"></td>
 						<td th:text="${product.description}"></td>
 						
 						<td th:text="${product.priceBought}"></td>
-						
-						</td>
 						
 					</tr>
 				</tbody>
