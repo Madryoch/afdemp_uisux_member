@@ -28,12 +28,13 @@
 					<tr data-th-each="product : ${memberCartItemList}">
 						<td th:text="${product.id}"></td>
 						<td th:text="${product.currentPurchasePrice}"></td>
+						<td th:text="${product.product.id}"></td>
 						<td th:text="${product.qty}"></td>
 						<td th:text="${product.product.name}"></td>
 						
 						<td>
 							<input hidden="hidden" name="id" th:value="${product.id}" />
-							<button th:id="'oneProd-'+${product.id}" class="btn btn-danger btn-xs delete-offer" type="submit" value="delete" >
+							<button th:id="${product.id}" class="btn btn-danger btn-xs delete-offer" type="submit" value="delete" >
 							<span class="fa fa-times"></span>Delete</button>
 						</td>
 						
