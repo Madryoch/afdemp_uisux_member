@@ -1,21 +1,17 @@
 package org.afdemp.uisux.controller;
 
-import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.afdemp.uisux.domain.Category;
+import org.afdemp.uisux.domain.MemberCartItem;
 import org.afdemp.uisux.domain.Product;
 import org.afdemp.uisux.domain.ShoppingCart;
-import org.afdemp.uisux.domain.MemberCartItem;
 import org.afdemp.uisux.domain.User;
 import org.afdemp.uisux.domain.security.UserRole;
 import org.afdemp.uisux.service.MemberCartItemService;
@@ -24,8 +20,6 @@ import org.afdemp.uisux.service.CategoryService;
 import org.afdemp.uisux.service.ProductService;
 import org.afdemp.uisux.service.UserRoleService;
 import org.afdemp.uisux.service.UserService;
-import org.afdemp.uisux.utility.ImageUtility;
-import org.afdemp.uisux.utility.MemberCartItemWrapper;
 
 @Controller
 public class ProductController {
@@ -87,6 +81,22 @@ public class ProductController {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_MEMBER");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
+		model.addAttribute("memberCartItemList", memberCartItemService.findByShoppingCart(shoppingCart));
+		return "offerList";
+	}
+	
+	
+	@RequestMapping(value="/removeOffer", method=RequestMethod.POST)
+	public String remove(@ModelAttribute("id") Long memberCartItemId, Model model, Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_MEMBER");
+		ShoppingCart shoppingCart = userRole.getShoppingCart();
+		
+		if (memberCartItemService.removeMemberCartItem(memberCartItemId, shoppingCart.getId())) {
+			model.addAttribute("offerRemoveSuccess", true);
+		}else {
+			model.addAttribute("offerRemoveFailure", true);
+		}
 		model.addAttribute("memberCartItemList", memberCartItemService.findByShoppingCart(shoppingCart));
 		return "offerList";
 	}
