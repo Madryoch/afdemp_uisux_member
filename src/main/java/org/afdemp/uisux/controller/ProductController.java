@@ -69,15 +69,20 @@ public class ProductController {
 			Model model, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_MEMBER");
+		ShoppingCart shoppingCart = userRole.getShoppingCart();
 		
-		if (memberCartItemService.putUpForSale(product, qty, userRole.getShoppingCart())) {
+		if (memberCartItemService.putUpForSale(product, qty, shoppingCart)) {
 			model.addAttribute("offerSuccess", true);
 		}else {
 			model.addAttribute("offerFailure", true);
 		}
-
-		return "/";
+		
+		model.addAttribute("memberCartItemList", memberCartItemService.findByShoppingCart(shoppingCart));
+		
+		return "offerList";
 	}
+	
+	
 	
 	
 	
