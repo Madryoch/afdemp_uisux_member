@@ -71,7 +71,7 @@ public class ProductController {
 		UserRole userRole = userRoleService.findByUserAndRole(user, "ROLE_MEMBER");
 		ShoppingCart shoppingCart = userRole.getShoppingCart();
 		
-		if (memberCartItemService.putUpForSale(product, qty, shoppingCart)) {
+		if (qty > 0 && memberCartItemService.putUpForSale(product, qty, shoppingCart)) {
 			model.addAttribute("offerSuccess", true);
 		}else {
 			model.addAttribute("offerFailure", true);
